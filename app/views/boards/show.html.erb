@@ -56,14 +56,25 @@
   <tr>
     <th>Title</th>
     <th>Body</th>
+    <th>Posted by</th>
     <th>Posted on</th>
     <th>Expires on</th>
   </tr>
 
   <% @active_posts.each do |a_post| %>
     <tr>
-      <td><%= a_post.title %></td>
+      <td>
+        <%= a_post.title %>
+        <% if current_user.id == a_post.user_id %>
+          <a href="/delete/post<%= a_post.id %>">Delete Post</a>
+        <% end %>
+      </td>
       <td><%= a_post.body %></td>
+      <td>
+        <% matching_users =  User.where({:id => a_post.user_id}) %>
+        <% the_user = matching_users.at(0) %>
+        <%= the_user.email %>
+      </td>
       <td><%= a_post.created_at.strftime("%b %e, %Y") %></td>
       <td><%= a_post.expires_on.strftime("%b %e, %Y") %></td>
     </tr>
@@ -76,14 +87,25 @@
   <tr>
     <th>Title</th>
     <th>Body</th>
+    <th>Posted by</th>
     <th>Posted on</th>
     <th>Expired on</th>
   </tr>
 
   <% @expired_posts.each do |a_post| %>
     <tr>
-      <td><%= a_post.title %></td>
+      <td>
+        <%= a_post.title %>
+        <% if current_user.id == a_post.user_id %>
+          <a href="/delete/post<%= a_post.id %>">Delete Post</a>
+        <% end %>
+      </td>
       <td><%= a_post.body %></td>
+      <td>
+        <% matching_users =  User.where({:id => a_post.user_id}) %>
+        <% the_user = matching_users.at(0) %>
+        <%= the_user.email %>
+      </td>
       <td><%= a_post.created_at.strftime("%b %e, %Y") %></td>
       <td><%= a_post.expires_on.strftime("%b %e, %Y") %></td>
     </tr>
