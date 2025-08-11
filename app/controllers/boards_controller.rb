@@ -26,6 +26,9 @@ class BoardsController < ApplicationController
   def create
     the_board = Board.new
     the_board.name = params.fetch("query_name")
+    if current_user != nil
+      the_board.user_id = current_user.id
+    end
 
     if the_board.valid?
       the_board.save

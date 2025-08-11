@@ -4,6 +4,7 @@ task({ :sample_data => :environment }) do
 
   Board.destroy_all
   Post.destroy_all
+  User.destroy_all
   
   ActiveRecord::Base.connection.tables.each do |t|
     begin
@@ -12,14 +13,24 @@ task({ :sample_data => :environment }) do
       # Skip tables that don't have an id sequence
     end
   end
+
+  usernames = ["alice", "bob", "carol", "dave", "eve"]
+  usernames.each do |username|
+    user = User.new
+    user.email = "#{username}@example.com"
+    user.password = "password"
+    user.save
+  end
     
   5.times do
     board = Board.new
     board.name = Faker::Address.community
+    board.user_id = User.all.sample.id
     board.save
 
     rand(10..50).times do
       post = Post.new
+      post.user_id = User.all.sample.id
       post.board_id = board.id
       post.title = rand < 0.5 ? Faker::Commerce.product_name : Faker::Job.title
       post.body = Faker::Quotes::Shakespeare.hamlet_quote 
@@ -29,6 +40,7 @@ task({ :sample_data => :environment }) do
     end
   end
 
+  puts "There are now #{User.count} rows in the boards table."
   puts "There are now #{Board.count} rows in the boards table."
   puts "There are now #{Post.count} rows in the posts table."
 end
